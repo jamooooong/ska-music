@@ -144,7 +144,7 @@ function ProfessorComponent() {
           <h1 className="mb-6 text-3xl font-bold text-gray-900">교수 로그인</h1>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
+              <label className="mb-2 block text-sm font-medium text-gray-900">
                 교수 고유번호
               </label>
               <input
@@ -153,14 +153,14 @@ function ProfessorComponent() {
                 onChange={(e) => setProfessorCode(e.target.value.toUpperCase())}
                 placeholder="예: A1B2C"
                 maxLength={5}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono focus:border-green-500 focus:outline-none"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono focus:border-accent focus:outline-none"
                 disabled={loginLoading}
               />
             </div>
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full rounded-lg bg-green-600 px-4 py-2 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full rounded-lg bg-accent px-4 py-2 font-medium text-white transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loginLoading ? '로그인 중...' : '로그인'}
             </button>
@@ -196,13 +196,13 @@ function ProfessorComponent() {
               value={newClassName}
               onChange={(e) => setNewClassName(e.target.value)}
               placeholder="수업명 (예: 데이터베이스 시스템)"
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-green-500 focus:outline-none"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-accent focus:outline-none"
               disabled={createLoading}
             />
             <button
               type="submit"
               disabled={createLoading}
-              className="rounded-lg bg-green-600 px-6 py-2 font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-accent px-6 py-2 font-medium text-white transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
               {createLoading ? '생성 중...' : '생성'}
             </button>
@@ -212,9 +212,9 @@ function ProfessorComponent() {
         <div className="rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-2xl font-semibold text-gray-900">내 수업 목록</h2>
           {playlistsLoading ? (
-            <p className="text-center text-gray-500">불러오는 중...</p>
+            <p className="text-center text-gray-600">불러오는 중...</p>
           ) : playlists.length === 0 ? (
-            <p className="text-center text-gray-500">생성된 수업이 없습니다</p>
+            <p className="text-center text-gray-600">생성된 수업이 없습니다</p>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {playlists.map((playlist) => (
@@ -222,7 +222,7 @@ function ProfessorComponent() {
                   key={playlist.id}
                   to="/professor/$playlistId"
                   params={{ playlistId: playlist.id }}
-                  className="block rounded-lg border border-gray-200 p-4 transition hover:border-green-500 hover:shadow-md"
+                  className="block rounded-lg border border-gray-200 p-4 transition hover:border-accent hover:shadow-md"
                 >
                   <h3 className="mb-2 text-lg font-semibold text-gray-900">
                     {playlist.class_name}
@@ -232,12 +232,12 @@ function ProfessorComponent() {
                       총 {playlist.song_count}곡
                     </span>
                     {playlist.pending_count! > 0 && (
-                      <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-600">
+                      <span className="rounded-full bg-[#ffe5e7] px-2 py-1 text-xs font-medium text-danger">
                         대기 {playlist.pending_count}곡
                       </span>
                     )}
                   </div>
-                  <p className="mt-2 text-xs text-gray-500">
+                  <p className="mt-2 text-xs text-gray-600">
                     {new Date(playlist.created_at).toLocaleDateString('ko-KR')}
                   </p>
                 </Link>

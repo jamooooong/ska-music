@@ -86,18 +86,18 @@ function AdminComponent() {
               value={professorName}
               onChange={(e) => setProfessorName(e.target.value)}
               placeholder="교수 이름"
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-primary focus:outline-none"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-lg bg-primary px-6 py-2 font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? '생성 중...' : '생성'}
             </button>
           </form>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-gray-600">
             5자리 영문+숫자 고유번호가 자동 생성됩니다
           </p>
         </div>
@@ -105,19 +105,19 @@ function AdminComponent() {
         <div className="rounded-lg bg-white p-6 shadow">
           <h2 className="mb-4 text-2xl font-semibold text-gray-900">교수 목록</h2>
           {fetchLoading ? (
-            <p className="text-center text-gray-500">불러오는 중...</p>
+            <p className="text-center text-gray-600">불러오는 중...</p>
           ) : professors.length === 0 ? (
-            <p className="text-center text-gray-500">등록된 교수가 없습니다</p>
+            <p className="text-center text-gray-600">등록된 교수가 없습니다</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="pb-3 text-left font-semibold text-gray-700">이름</th>
-                    <th className="pb-3 text-left font-semibold text-gray-700">
+                    <th className="pb-3 text-left font-semibold text-gray-900">이름</th>
+                    <th className="pb-3 text-left font-semibold text-gray-900">
                       고유번호
                     </th>
-                    <th className="pb-3 text-left font-semibold text-gray-700">
+                    <th className="pb-3 text-left font-semibold text-gray-900">
                       생성일
                     </th>
                   </tr>
@@ -127,7 +127,7 @@ function AdminComponent() {
                     <tr key={professor.id} className="border-b border-gray-100">
                       <td className="py-3 text-gray-900">{professor.name}</td>
                       <td className="py-3">
-                        <code className="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-blue-600">
+                        <code className="rounded bg-gray-100 px-2 py-1 font-mono text-sm text-primary">
                           {professor.professor_code}
                         </code>
                       </td>

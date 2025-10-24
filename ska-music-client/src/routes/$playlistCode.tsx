@@ -85,7 +85,7 @@ function StudentPageComponent() {
           <div className="mb-6 text-center">
             <button
               onClick={() => setShowRequestForm(true)}
-              className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-medium text-white transition hover:bg-blue-700"
+              className="rounded-lg bg-primary px-8 py-3 text-lg font-medium text-white transition hover:bg-primary-dark"
             >
               신청하기
             </button>
@@ -96,7 +96,7 @@ function StudentPageComponent() {
               승인된 플레이리스트
             </h2>
             {acceptedSongs.length === 0 ? (
-              <p className="text-center text-gray-500">
+              <p className="text-center text-gray-600">
                 아직 승인된 신청곡이 없습니다
               </p>
             ) : (
@@ -104,9 +104,9 @@ function StudentPageComponent() {
                 {acceptedSongs.map((song, index) => (
                   <div
                     key={song.id}
-                    className="flex items-center gap-4 rounded-lg border border-gray-200 bg-blue-50 p-4"
+                    className="flex items-center gap-4 rounded-lg border border-gray-200 bg-[#fff0f1] p-4"
                   >
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary text-xl font-bold text-white">
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">

@@ -126,7 +126,7 @@ function PlaylistManagementComponent() {
         <div className="mb-8">
           <button
             onClick={() => navigate({ to: '/professor' })}
-            className="mb-4 text-green-600 hover:underline"
+            className="mb-4 text-accent hover:underline"
           >
             ← 목록으로 돌아가기
           </button>
@@ -134,12 +134,12 @@ function PlaylistManagementComponent() {
             {playlist.class_name}
           </h1>
           <div className="flex items-center gap-4">
-            <code className="rounded bg-gray-100 px-3 py-1 font-mono text-sm text-gray-700">
+            <code className="rounded bg-gray-100 px-3 py-1 font-mono text-sm text-gray-900">
               {playlist.playlist_code}
             </code>
             <button
               onClick={handleCopyLink}
-              className="rounded bg-green-600 px-4 py-1 text-sm font-medium text-white transition hover:bg-green-700"
+              className="rounded bg-accent px-4 py-1 text-sm font-medium text-white transition hover:bg-primary"
             >
               학생 링크 복사
             </button>
@@ -151,13 +151,13 @@ function PlaylistManagementComponent() {
             <h2 className="mb-4 text-2xl font-semibold text-gray-900">
               대기 중인 신청곡
               {pendingRequests.length > 0 && (
-                <span className="ml-2 rounded-full bg-red-100 px-3 py-1 text-sm text-red-600">
+                <span className="ml-2 rounded-full bg-[#ffe5e7] px-3 py-1 text-sm text-danger">
                   {pendingRequests.length}
                 </span>
               )}
             </h2>
             {pendingRequests.length === 0 ? (
-              <p className="text-center text-gray-500">대기 중인 신청곡이 없습니다</p>
+              <p className="text-center text-gray-600">대기 중인 신청곡이 없습니다</p>
             ) : (
               <div className="space-y-4">
                 {pendingRequests.map((request) => (
@@ -177,7 +177,7 @@ function PlaylistManagementComponent() {
               승인된 플레이리스트
             </h2>
             {acceptedSongs.length === 0 ? (
-              <p className="text-center text-gray-500">승인된 신청곡이 없습니다</p>
+              <p className="text-center text-gray-600">승인된 신청곡이 없습니다</p>
             ) : (
               <div className="space-y-3">
                 {acceptedSongs.map((song, index) => (
@@ -206,7 +206,7 @@ function PendingRequestCard({
       <div className="mb-3">
         <div className="mb-1 flex items-start justify-between">
           <h3 className="text-lg font-semibold text-gray-900">{request.song_title}</h3>
-          <span className="text-sm text-gray-500">{request.requester_name}</span>
+          <span className="text-sm text-gray-600">{request.requester_name}</span>
         </div>
         <p className="text-sm text-gray-600">{request.message}</p>
       </div>
@@ -215,7 +215,7 @@ function PendingRequestCard({
           href={request.youtube_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm text-blue-600 hover:underline"
+          className="text-sm text-info hover:underline"
         >
           {request.youtube_url}
         </a>
@@ -223,13 +223,13 @@ function PendingRequestCard({
       <div className="flex gap-2">
         <button
           onClick={() => onAccept(request.id)}
-          className="flex-1 rounded bg-green-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-green-700"
+          className="flex-1 rounded bg-success px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
         >
           승인
         </button>
         <button
           onClick={() => onReject(request.id)}
-          className="flex-1 rounded bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+          className="flex-1 rounded bg-danger px-4 py-2 text-sm font-medium text-white transition hover:bg-primary-dark"
         >
           거절
         </button>
@@ -240,20 +240,20 @@ function PendingRequestCard({
 
 function AcceptedSongCard({ song, order }: { song: SongRequest; order: number }) {
   return (
-    <div className="rounded-lg border border-gray-200 bg-green-50 p-4">
+    <div className="rounded-lg border border-gray-200 bg-[#fff0f1] p-4">
       <div className="flex items-start gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-600 text-sm font-bold text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
           {order}
         </div>
         <div className="flex-1">
           <h3 className="font-semibold text-gray-900">{song.song_title}</h3>
           <p className="text-sm text-gray-600">신청: {song.requester_name}</p>
-          <p className="mt-1 text-sm text-gray-700">{song.message}</p>
+          <p className="mt-1 text-sm text-gray-900">{song.message}</p>
           <a
             href={song.youtube_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1 inline-block text-sm text-blue-600 hover:underline"
+            className="mt-1 inline-block text-sm text-info hover:underline"
           >
             유튜브 링크
           </a>

@@ -13,13 +13,13 @@ function HomeComponent() {
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Link
             to="/admin"
-            className="rounded-lg bg-blue-600 px-8 py-3 font-medium text-white transition hover:bg-blue-700"
+            className="rounded-lg bg-primary px-8 py-3 font-medium text-white transition hover:bg-primary-dark"
           >
             관리자 페이지
           </Link>
           <Link
             to="/professor"
-            className="rounded-lg bg-green-600 px-8 py-3 font-medium text-white transition hover:bg-green-700"
+            className="rounded-lg bg-accent px-8 py-3 font-medium text-white transition hover:bg-primary"
           >
             교수 로그인
           </Link>

@@ -102,7 +102,7 @@ export function SongRequestForm({ playlistId, onClose, onSuccess }: SongRequestF
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-900">
               신청자 이름 *
             </label>
             <input
@@ -112,18 +112,18 @@ export function SongRequestForm({ playlistId, onClose, onSuccess }: SongRequestF
               onChange={handleChange}
               className={`w-full rounded-lg border px-4 py-2 focus:outline-none ${
                 errors.requester_name
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:border-blue-500'
+                  ? 'border-danger focus:border-danger'
+                  : 'border-gray-300 focus:border-primary'
               }`}
               disabled={loading}
             />
             {errors.requester_name && (
-              <p className="mt-1 text-sm text-red-600">{errors.requester_name}</p>
+              <p className="mt-1 text-sm text-danger">{errors.requester_name}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-900">
               노래 제목 *
             </label>
             <input
@@ -133,18 +133,18 @@ export function SongRequestForm({ playlistId, onClose, onSuccess }: SongRequestF
               onChange={handleChange}
               className={`w-full rounded-lg border px-4 py-2 focus:outline-none ${
                 errors.song_title
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:border-blue-500'
+                  ? 'border-danger focus:border-danger'
+                  : 'border-gray-300 focus:border-primary'
               }`}
               disabled={loading}
             />
             {errors.song_title && (
-              <p className="mt-1 text-sm text-red-600">{errors.song_title}</p>
+              <p className="mt-1 text-sm text-danger">{errors.song_title}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-900">
               사연 *
             </label>
             <textarea
@@ -154,18 +154,18 @@ export function SongRequestForm({ playlistId, onClose, onSuccess }: SongRequestF
               rows={4}
               className={`w-full rounded-lg border px-4 py-2 focus:outline-none ${
                 errors.message
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:border-blue-500'
+                  ? 'border-danger focus:border-danger'
+                  : 'border-gray-300 focus:border-primary'
               }`}
               disabled={loading}
             />
             {errors.message && (
-              <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+              <p className="mt-1 text-sm text-danger">{errors.message}</p>
             )}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-900">
               유튜브 링크 *
             </label>
             <input
@@ -176,13 +176,13 @@ export function SongRequestForm({ playlistId, onClose, onSuccess }: SongRequestF
               placeholder="https://www.youtube.com/watch?v=..."
               className={`w-full rounded-lg border px-4 py-2 focus:outline-none ${
                 errors.youtube_url
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 focus:border-blue-500'
+                  ? 'border-danger focus:border-danger'
+                  : 'border-gray-300 focus:border-primary'
               }`}
               disabled={loading}
             />
             {errors.youtube_url && (
-              <p className="mt-1 text-sm text-red-600">{errors.youtube_url}</p>
+              <p className="mt-1 text-sm text-danger">{errors.youtube_url}</p>
             )}
           </div>
 
@@ -190,14 +190,14 @@ export function SongRequestForm({ playlistId, onClose, onSuccess }: SongRequestF
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 transition hover:bg-gray-50"
+              className="flex-1 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-900 transition hover:bg-gray-50"
               disabled={loading}
             >
               취소
             </button>
             <button
               type="submit"
-              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex-1 rounded-lg bg-primary px-4 py-2 font-medium text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
               disabled={loading}
             >
               {loading ? '제출 중...' : '제출'}
