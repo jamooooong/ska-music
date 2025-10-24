@@ -1,7 +1,5 @@
 export const validateYoutubeUrl = (url: string): boolean => {
-  const youtubeRegex =
-    /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]+$|^https:\/\/youtu\.be\/[\w-]+$/;
-  return youtubeRegex.test(url);
+  return url.toLowerCase().includes('youtube');
 };
 
 export const generateProfessorCode = (): string => {
@@ -33,9 +31,7 @@ export const validateSongRequest = (data: {
     errors.song_title = '노래 제목은 200자 이내로 입력해주세요';
   }
 
-  if (!data.message || data.message.trim().length === 0) {
-    errors.message = '사연을 입력해주세요';
-  } else if (data.message.length > 500) {
+  if (data.message && data.message.length > 500) {
     errors.message = '사연은 500자 이내로 입력해주세요';
   }
 
