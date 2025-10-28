@@ -20,6 +20,9 @@ function ProfessorComponent() {
   const [playlistsLoading, setPlaylistsLoading] = useState(false);
   const [newClassName, setNewClassName] = useState('');
   const [createLoading, setCreateLoading] = useState(false);
+  const [deletingPlaylistId, setDeletingPlaylistId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [playlistToDelete, setPlaylistToDelete] = useState<PlaylistWithProfessor | null>(null);
 
   useEffect(() => {
     if (isAuthenticated && professor) {
@@ -137,6 +140,42 @@ function ProfessorComponent() {
     } finally {
       setCreateLoading(false);
     }
+  };
+
+  const handleDeleteClick = (playlist: PlaylistWithProfessor, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setPlaylistToDelete(playlist);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!playlistToDelete) return;
+
+    setDeletingPlaylistId(playlistToDelete.id);
+    try {
+      const { error } = await supabase
+        .from('playlists')
+        .delete()
+        .eq('id', playlistToDelete.id);
+
+      if (error) throw error;
+
+      toast.success('수업이 삭제되었습니다');
+      setPlaylists(playlists.filter((p) => p.id !== playlistToDelete.id));
+      setShowDeleteModal(false);
+      setPlaylistToDelete(null);
+    } catch (error) {
+      console.error('Error deleting playlist:', error);
+      toast.error('수업 삭제에 실패했습니다');
+    } finally {
+      setDeletingPlaylistId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setPlaylistToDelete(null);
   };
 
   if (!isAuthenticated || !professor) {
@@ -280,40 +319,51 @@ function ProfessorComponent() {
               ) : (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
                   {playlists.map((playlist) => (
-                    <Link
-                      key={playlist.id}
-                      to="/professor/$playlistId"
-                      params={{ playlistId: playlist.id }}
-                    >
-                      <GlassSurface
-                        width="auto"
-                        height="auto"
-                        borderRadius={16}
-                        className="p-4 transition hover:scale-105"
-                        backgroundOpacity={0.15}
-                        brightness={30}
-                        opacity={0.6}
+                    <div key={playlist.id} className="relative group">
+                      <Link
+                        to="/professor/$playlistId"
+                        params={{ playlistId: playlist.id }}
                       >
-                        <div className="w-full">
-                          <h3 className="mb-2 text-lg font-semibold text-white">
-                            {playlist.class_name}
-                          </h3>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-300">
-                              총 {playlist.song_count}곡
-                            </span>
-                            {playlist.pending_count! > 0 && (
-                              <span className="rounded-full bg-primary/80 px-2 py-1 text-xs font-medium text-white">
-                                대기 {playlist.pending_count}곡
+                        <GlassSurface
+                          width="auto"
+                          height="auto"
+                          borderRadius={16}
+                          className="p-4 transition hover:scale-105"
+                          backgroundOpacity={0.15}
+                          brightness={30}
+                          opacity={0.6}
+                        >
+                          <div className="w-full">
+                            <div className="flex items-start justify-between mb-2">
+                              <h3 className="text-lg font-semibold text-white pr-2 flex-1">
+                                {playlist.class_name}
+                              </h3>
+                              <button
+                                onClick={(e) => handleDeleteClick(playlist, e)}
+                                disabled={deletingPlaylistId === playlist.id}
+                                className="rounded-lg bg-red-500/80 px-2 py-1 text-xs font-medium text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50 opacity-0 group-hover:opacity-100"
+                                title="수업 삭제"
+                              >
+                                삭제
+                              </button>
+                            </div>
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-gray-300">
+                                총 {playlist.song_count}곡
                               </span>
-                            )}
+                              {playlist.pending_count! > 0 && (
+                                <span className="rounded-full bg-primary/80 px-2 py-1 text-xs font-medium text-white">
+                                  대기 {playlist.pending_count}곡
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-2 text-xs text-gray-400">
+                              {new Date(playlist.created_at).toLocaleDateString('ko-KR')}
+                            </p>
                           </div>
-                          <p className="mt-2 text-xs text-gray-400">
-                            {new Date(playlist.created_at).toLocaleDateString('ko-KR')}
-                          </p>
-                        </div>
-                      </GlassSurface>
-                    </Link>
+                        </GlassSurface>
+                      </Link>
+                    </div>
                   ))}
                 </div>
               )}
@@ -321,6 +371,52 @@ function ProfessorComponent() {
           </GlassSurface>
         </div>
       </div>
+
+      {showDeleteModal && playlistToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <GlassSurface
+            width="480"
+            height="auto"
+            borderRadius={24}
+            className="w-full max-w-md p-6"
+            backgroundOpacity={0.15}
+            brightness={25}
+            opacity={0.6}
+          >
+            <div className="w-full">
+              <h3 className="mb-4 text-xl font-bold text-white">
+                수업 삭제 확인
+              </h3>
+              <p className="mb-6 text-gray-300">
+                <span className="font-semibold text-white">
+                  {playlistToDelete.class_name}
+                </span>{" "}
+                수업을 정말 삭제하시겠습니까?
+                <br />
+                <span className="text-sm text-red-400 mt-2 block">
+                  ⚠️ 해당 수업의 모든 신청곡도 함께 삭제됩니다.
+                </span>
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={handleDeleteCancel}
+                  disabled={deletingPlaylistId !== null}
+                  className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 font-medium text-white transition hover:bg-white/20 backdrop-blur-sm disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  disabled={deletingPlaylistId !== null}
+                  className="flex-1 rounded-lg bg-red-500/80 px-4 py-2 font-medium text-white transition hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {deletingPlaylistId === playlistToDelete.id ? "삭제 중..." : "삭제"}
+                </button>
+              </div>
+            </div>
+          </GlassSurface>
+        </div>
+      )}
     </>
   );
 }
