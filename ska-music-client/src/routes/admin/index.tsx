@@ -273,6 +273,10 @@ function AdminComponent() {
                 <span className="text-sm text-gray-400">
                   고유번호: {professorToDelete.professor_code}
                 </span>
+                <br />
+                <span className="text-sm text-red-400 mt-2 block">
+                  ⚠️ 해당 교수의 모든 수업과 신청곡이 함께 삭제됩니다.
+                </span>
               </p>
               <div className="flex gap-3">
                 <button
