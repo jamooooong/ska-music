@@ -1,0 +1,131 @@
+// SKA Music Platform ERD
+// https://dbdiagram.io/d/ 에서 사용
+
+Project SKA_Music {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # SKA Music Platform Database
+    음악 신청 플랫폼 데이터베이스 스키마
+
+    ## 주요 변경사항 (v2.0)
+    - CASCADE DELETE 설정 추가
+    - RLS (Row Level Security) 정책 적용
+  '''
+}
+
+// 교수 테이블
+Table professors {
+  id uuid [pk, default: `uuid_generate_v4()`]
+  professor_code varchar(5) [unique, not null, note: '5자리 영문+숫자 고유번호']
+  name varchar [not null, note: '교수 이름']
+  created_at timestamptz [default: `now()`]
+
+  Note: '교수 계정 정보 (관리자가 생성)'
+
+  Indexes {
+    professor_code [unique, name: 'idx_professor_code']
+  }
+}
+
+// 플레이리스트(수업) 테이블
+Table playlists {
+  id uuid [pk, default: `uuid_generate_v4()`]
+  professor_id uuid [not null]
+  class_name varchar [not null, note: '수업명']
+  playlist_code uuid [unique, default: `uuid_generate_v4()`, note: 'QR 코드용 고유 코드']
+  is_active boolean [default: true, note: '활성 상태']
+  created_at timestamptz [default: `now()`]
+  updated_at timestamptz [default: `now()`]
+
+  Note: '''
+    수업 플레이리스트
+    - 교수가 수업별로 생성
+    - playlist_code로 학생이 접근
+  '''
+
+  Indexes {
+    professor_id [name: 'idx_playlists_professor']
+    playlist_code [unique, name: 'idx_playlist_code']
+    is_active [name: 'idx_playlists_active']
+  }
+}
+
+// 음악 신청 테이블
+Table song_requests {
+  id uuid [pk, default: `uuid_generate_v4()`]
+  playlist_id uuid [not null]
+  requester_name varchar [not null, note: '신청자 이름']
+  song_title varchar [not null, note: '노래 제목']
+  message text [null, note: '신청 메시지']
+  youtube_url varchar [not null, note: '유튜브 URL']
+  status varchar [not null, default: 'pending', note: 'pending | accepted | rejected']
+  requested_at timestamptz [default: `now()`]
+  processed_at timestamptz [null, note: '승인/거절 처리 시간']
+  display_order integer [null, note: '재생 순서']
+
+  Note: '''
+    학생 음악 신청
+    - 학생이 playlist_code로 접근하여 신청
+    - 교수가 승인/거절 처리
+  '''
+
+  Indexes {
+    playlist_id [name: 'idx_song_requests_playlist']
+    status [name: 'idx_song_requests_status']
+    (playlist_id, display_order) [name: 'idx_song_requests_order']
+  }
+}
+
+// 관계 정의 (CASCADE DELETE 포함)
+Ref: playlists.professor_id > professors.id [delete: cascade, update: cascade]
+Ref: song_requests.playlist_id > playlists.id [delete: cascade, update: cascade]
+
+// 제약 조건
+TableGroup "User Management" {
+  professors
+}
+
+TableGroup "Content Management" {
+  playlists
+  song_requests
+}
+
+// 열거형 (ENUM)
+Enum song_request_status {
+  pending [note: '대기 중']
+  accepted [note: '승인됨']
+  rejected [note: '거절됨']
+}
+
+// 추가 메모
+Note cascade_delete {
+  '''
+  CASCADE DELETE 동작:
+
+  1. 교수(professor) 삭제 시:
+     → 해당 교수의 모든 플레이리스트(playlists) 자동 삭제
+     → 연쇄적으로 모든 신청곡(song_requests)도 자동 삭제
+
+  2. 플레이리스트(playlist) 삭제 시:
+     → 해당 플레이리스트의 모든 신청곡(song_requests) 자동 삭제
+
+  예시:
+  - 교수 "김교수" 삭제
+    → "컴퓨터공학개론" 플레이리스트 삭제
+    → 해당 수업의 모든 신청곡 삭제
+  '''
+}
+
+Note rls_policies {
+  '''
+  RLS (Row Level Security) 정책:
+
+  - 모든 테이블에 RLS 활성화
+  - anon key로 모든 CRUD 작업 허용 (현재 개발 환경)
+
+  프로덕션 권장 정책:
+  - 교수: 자신의 플레이리스트만 수정/삭제 가능
+  - 학생: 자신의 신청만 삭제 가능
+  - 관리자: 교수 생성/삭제 권한
+  '''
+}

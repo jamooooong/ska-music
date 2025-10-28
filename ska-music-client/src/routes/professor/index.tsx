@@ -116,27 +116,42 @@ function ProfessorComponent() {
       return;
     }
 
+    if (!professor?.id) {
+      toast.error('로그인 정보를 확인할 수 없습니다. 다시 로그인해주세요.');
+      logout();
+      return;
+    }
+
     setCreateLoading(true);
     try {
-      const { error } = await supabase
+      console.log('Creating playlist with professor_id:', professor.id);
+
+      const { data, error } = await supabase
         .from('playlists')
         .insert([
           {
-            professor_id: professor!.id,
+            professor_id: professor.id,
             class_name: newClassName.trim(),
           },
         ])
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error details:', error);
+        toast.error(`생성 실패: ${error.message || '알 수 없는 오류'}`);
+        throw error;
+      }
 
+      console.log('Playlist created successfully:', data);
       toast.success('수업이 생성되었습니다!');
       setNewClassName('');
       fetchPlaylists();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating playlist:', error);
-      toast.error('수업 생성에 실패했습니다');
+      if (!error.message) {
+        toast.error('수업 생성에 실패했습니다');
+      }
     } finally {
       setCreateLoading(false);
     }
