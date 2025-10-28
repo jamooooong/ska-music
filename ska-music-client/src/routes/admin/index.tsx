@@ -87,12 +87,17 @@ function AdminComponent() {
 
     setDeletingId(professorToDelete.id);
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("professors")
         .delete()
-        .eq("id", professorToDelete.id);
+        .eq("id", professorToDelete.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Delete error:", error);
+        toast.error(`삭제 실패: ${error.message}`);
+        throw error;
+      }
 
       toast.success("교수가 삭제되었습니다");
       setProfessors(
@@ -100,9 +105,11 @@ function AdminComponent() {
       );
       setShowDeleteModal(false);
       setProfessorToDelete(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting professor:", error);
-      toast.error("교수 삭제에 실패했습니다");
+      if (!error.message) {
+        toast.error("교수 삭제에 실패했습니다");
+      }
     } finally {
       setDeletingId(null);
     }

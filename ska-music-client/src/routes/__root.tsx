@@ -9,7 +9,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <div className="min-h-screen absolute w-full">
+      <div className="min-h-screen absolute w-full bg-black">
         <Outlet />
       </div>
 
